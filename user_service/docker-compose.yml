@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  user-service:
+    build: .
+    command: /bin/bash -c "alembic upgrade head&& uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@user-db/user_db
+      - RABBITMQ_HOST=rabbitmq
+
+    depends_on:
+      - user-db
+      - rabbitmq
+    networks:
+      - my_network
+      - microservices-network
+
+  user-db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+
+    ports:
+      - "5433:5432"
+    networks:
+      - my_network
+      - microservices-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - my_network
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true
+  my_network:
+
+
+

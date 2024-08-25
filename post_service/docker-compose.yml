@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  post-service:
+    build: .
+    command: /bin/bash -c "alembic upgrade head&& uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@post-db:5433/post_db
+    depends_on:
+      - post-db
+    networks:
+      - my_network
+      - microservices-network
+
+  post-db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: post_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    networks:
+      - my_network
+      - microservices-network
+
+networks:
+  microservices-network:
+    external: true
+  my_network:
+
