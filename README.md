@@ -48,7 +48,7 @@ Each service has its own Dockerfile and docker-compose file. To deploy and run e
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/DmytroDD2/microservices_project.git
+    git clone https://github.com/DmytroDD2/microservices_project.git-.git
     ```
 
 ### User-Service
